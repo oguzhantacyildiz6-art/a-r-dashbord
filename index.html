@@ -5,49 +5,50 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TEM BÜLTEN</title>
 <style>
-  :root { --red:#c8102e; --red-dark:#8b0d20; --white:#fff; --ink:#1a1a1a; --muted:#5c5c5c; }
+  :root { --tq:#0d9488; --tq-dark:#0f766e; --tq-soft:#ccfbf1; --white:#fff; --ink:#134e4a; --muted:#5b6e6c; }
   * { box-sizing:border-box; margin:0; padding:0; }
-  body { font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; background:#f4f1ef; color:var(--ink); line-height:1.5; }
+  body { font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; background:#e6fffa; color:var(--ink); line-height:1.5; }
   .flag-bar {
     position:fixed; left:0; top:0; bottom:0; width:86px;
-    background:var(--red); display:flex; align-items:center; justify-content:center;
+    background:#c8102e; display:flex; align-items:center; justify-content:center;
     z-index:20;
   }
-  .flag-bar img, .flag-emoji { font-size:46px; filter:drop-shadow(0 2px 2px rgba(0,0,0,.25)); }
+  .flag-emoji { font-size:46px; filter:drop-shadow(0 2px 2px rgba(0,0,0,.25)); }
   .wrap { margin-left:86px; padding:22px 18px 40px; }
   .container { max-width:1080px; margin:0 auto; display:none; }
   .container.show { display:block; }
   header {
-    background:var(--red); color:#fff; border-radius:14px; padding:22px 20px 18px;
+    background:linear-gradient(135deg,#0d9488,#14b8a6);
+    color:#fff; border-radius:14px; padding:22px 20px 18px;
     margin-bottom:22px; position:relative; overflow:hidden;
   }
-  header:after { content:""; position:absolute; right:-40px; top:-40px; width:140px; height:140px; border:18px solid rgba(255,255,255,.15); border-radius:50%; }
+  header:after { content:""; position:absolute; right:-40px; top:-40px; width:140px; height:140px; border:18px solid rgba(255,255,255,.18); border-radius:50%; }
   header h1 { font-size:2rem; letter-spacing:.5px; }
   header p { opacity:.95; margin-top:4px; }
-  .last-update { font-size:.85rem; margin-top:8px; color:#ffe4e6; }
+  .last-update { font-size:.85rem; margin-top:8px; color:#ccfbf1; }
   .main-title {
-    background:var(--red); color:#fff; padding:10px 14px; border-radius:8px;
+    background:var(--tq); color:#fff; padding:10px 14px; border-radius:8px;
     margin:8px 0 14px; font-size:1.2rem;
   }
   .section { margin-bottom:24px; }
-  .section-title { color:var(--red-dark); font-size:1.02rem; margin-bottom:10px; font-weight:700; }
+  .section-title { color:var(--tq-dark); font-size:1.02rem; margin-bottom:10px; font-weight:700; }
   .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:12px; }
-  .card { background:#fff; border:1px solid #e5d0d3; border-left:5px solid var(--red); border-radius:10px; padding:14px 14px 16px; }
+  .card { background:#fff; border:1px solid #99f6e4; border-left:5px solid var(--tq); border-radius:10px; padding:14px 14px 16px; }
   .card-header { display:flex; justify-content:space-between; gap:8px; margin-bottom:6px; font-size:.8rem; }
-  .source { color:var(--red); font-weight:700; }
+  .source { color:var(--tq-dark); font-weight:700; }
   .date { color:var(--muted); }
-  .badge { display:inline-block; background:#fde8eb; color:var(--red-dark); font-size:.68rem; font-weight:700; padding:2px 8px; border-radius:999px; margin-bottom:6px; }
+  .badge { display:inline-block; background:var(--tq-soft); color:var(--tq-dark); font-size:.68rem; font-weight:700; padding:2px 8px; border-radius:999px; margin-bottom:6px; }
   .card-title { font-size:1.02rem; font-weight:800; margin-bottom:6px; line-height:1.3; }
   .card-content { font-size:.9rem; color:#333; margin-bottom:12px; }
-  .card-link { display:inline-block; background:var(--red); color:#fff; text-decoration:none; font-weight:700; font-size:.84rem; padding:7px 12px; border-radius:7px; }
+  .card-link { display:inline-block; background:var(--tq); color:#fff; text-decoration:none; font-weight:700; font-size:.84rem; padding:7px 12px; border-radius:7px; }
   footer { text-align:center; margin-top:28px; color:var(--muted); font-size:.85rem; }
-  #login-screen { position:fixed; inset:0; background:var(--red); display:flex; align-items:center; justify-content:center; z-index:50; }
+  #login-screen { position:fixed; inset:0; background:linear-gradient(160deg,#0d9488,#115e59); display:flex; align-items:center; justify-content:center; z-index:50; }
   .login-box { width:100%; max-width:360px; background:#fff; border-radius:16px; padding:28px 22px; text-align:center; }
-  .login-box h2 { color:var(--red); }
+  .login-box h2 { color:var(--tq-dark); }
   .login-box p { color:#555; margin:8px 0 16px; }
   .login-box input, .login-box button { width:100%; padding:12px; border-radius:8px; font-size:1rem; margin-bottom:10px; }
-  .login-box input { border:1px solid #ddd; }
-  .login-box button { border:0; background:var(--red); color:#fff; font-weight:800; cursor:pointer; }
+  .login-box input { border:1px solid #99f6e4; }
+  .login-box button { border:0; background:var(--tq); color:#fff; font-weight:800; cursor:pointer; }
   .login-error { color:#b91c1c; min-height:18px; }
   @media (max-width:700px) { .flag-bar { width:54px; } .wrap { margin-left:54px; } .flag-emoji { font-size:30px; } }
 </style>
@@ -66,7 +67,6 @@
     <div class="login-error" id="login-error"></div>
   </div>
 </div>
-
 <div class="wrap">
 <div class="container" id="app">
   <header>
@@ -74,66 +74,56 @@
     <p>Son 2 haftanın haberleri ve sosyal medya özetleri</p>
     <p class="last-update">Kapsam: 6–20 Eylül 2026 • Güncelleme: 20 Eylül 2026</p>
   </header>
-
-  <div class="main-section">
-    <h2 class="main-title">Sosyal Medya</h2>
-    <div class="section">
-      <h3 class="section-title">DEM Parti @DEMGenelMerkezi</h3>
-      <div class="grid">
-        <article class="card"><div class="card-header"><span class="source">@DEMGenelMerkezi</span><span class="date">20 Eyl</span></div><div class="badge">Anma</div><h3 class="card-title">İbrahim Ayhan 8. yılında anıldı</h3><p class="card-content">Parti, İbrahim Ayhan’ı ölümünün 8. yılında andı ve “umutlarını gerçekleştirmek için mücadeleye devam” mesajı verdi.</p><a class="card-link" href="https://x.com/DEMGenelMerkezi/status/2101576263861235755" target="_blank" rel="noopener">Habere Git →</a></article>
-        <article class="card"><div class="card-header"><span class="source">@DEMGenelMerkezi</span><span class="date">20 Eyl</span></div><div class="badge">Anma</div><h3 class="card-title">Musa Anter 34. yılında anıldı</h3><p class="card-content">DEM Parti, Musa Anter cinayetinin hesabının sorulmasını ve süreçte geçmişle yüzleşilmesini istedi.</p><a class="card-link" href="https://x.com/DEMGenelMerkezi/status/2101559687804043480" target="_blank" rel="noopener">Habere Git →</a></article>
-        <article class="card"><div class="card-header"><span class="source">@DEMGenelMerkezi</span><span class="date">18 Eyl</span></div><div class="badge">Yayın</div><h3 class="card-title">Hatimoğulları İlke TV’ye çıktı</h3><p class="card-content">Eş Genel Başkan Tülay Hatimoğulları 18 Eylül saat 20.00’de İlke TV canlı yayınına katıldı.</p><a class="card-link" href="https://x.com/DEMGenelMerkezi/status/2100947957986017672" target="_blank" rel="noopener">Habere Git →</a></article>
-        <article class="card"><div class="card-header"><span class="source">@DEMGenelMerkezi</span><span class="date">17 Eyl</span></div><div class="badge">Açıklama</div><h3 class="card-title">Meclis erken toplanmalı çağrısı</h3><p class="card-content">Bakırhan ve Hatimoğulları, ekonomik kriz gerekçesiyle Meclis’in 1 Ekim’i beklemeden toplanmasını istedi.</p><a class="card-link" href="https://x.com/DEMGenelMerkezi/status/2100523468458508766" target="_blank" rel="noopener">Habere Git →</a></article>
-      </div>
-    </div>
-    <div class="section">
-      <h3 class="section-title">Ağrı Belediyesi @agribelediye</h3>
-      <div class="grid">
-        <article class="card"><div class="card-header"><span class="source">@agribelediye</span><span class="date">18 Eyl</span></div><div class="badge">Altyapı</div><h3 class="card-title">Fatih Mahallesi’ne 1.280 metrelik menfez</h3><p class="card-content">TRT Yolu ile Taşlıçay Deresi arasına yağmur suyu tahliyesi için 1.280 metre menfez hattı döşendi.</p><a class="card-link" href="https://x.com/agribelediye/status/2100975231066132918" target="_blank" rel="noopener">Habere Git →</a></article>
-        <article class="card"><div class="card-header"><span class="source">@agribelediye</span><span class="date">18 Eyl</span></div><div class="badge">Hizmet</div><h3 class="card-title">Konteyner alanları belediye atölyesinde üretiliyor</h3><p class="card-content">Çöp konteynerleri için üstü kapalı muhafaza alanları kendi atölyede yapılıp yerleştiriliyor.</p><a class="card-link" href="https://x.com/agribelediye/status/2100860047915925899" target="_blank" rel="noopener">Habere Git →</a></article>
-        <article class="card"><div class="card-header"><span class="source">@agribelediye</span><span class="date">17 Eyl</span></div><div class="badge">Ziyaret</div><h3 class="card-title">Memet Akkuş için başsağlığı ziyareti</h3><p class="card-content">Yeni Parti milletvekilleri Türkan Elçi ve Ali Gökçek, merhum eşbaşkan Memet Akkuş için başsağlığına geldi.</p><a class="card-link" href="https://x.com/agribelediye/status/2100509966616461386" target="_blank" rel="noopener">Habere Git →</a></article>
-        <article class="card"><div class="card-header"><span class="source">@agribelediye</span><span class="date">16 Eyl</span></div><div class="badge">Yol</div><h3 class="card-title">Asfalt çalışması sürüyor</h3><p class="card-content">Belediye, kent genelinde asfalt çalışmalarının program dahilinde devam ettiğini duyurdu.</p><a class="card-link" href="https://x.com/agribelediye/status/2100205814803747190" target="_blank" rel="noopener">Habere Git →</a></article>
-      </div>
-    </div>
-    <div class="section">
-      <h3 class="section-title">Ağrı Belediye Eşbaşkanı @HazalAras04</h3>
-      <div class="grid">
-        <article class="card"><div class="card-header"><span class="source">@HazalAras04</span><span class="date">17 Eyl</span></div><div class="badge">Saha</div><h3 class="card-title">Parke taşı çalışmaları yerinde incelendi</h3><p class="card-content">Eşbaşkan Hazal Aras, kentteki parke taşı döşeme işlerini sahada denetlediğini açıkladı.</p><a class="card-link" href="https://x.com/HazalAras04/status/2100584754693222546" target="_blank" rel="noopener">Habere Git →</a></article>
-      </div>
+  <h2 class="main-title">Sosyal Medya</h2>
+  <div class="section">
+    <h3 class="section-title">DEM Parti @DEMGenelMerkezi</h3>
+    <div class="grid">
+      <article class="card"><div class="card-header"><span class="source">@DEMGenelMerkezi</span><span class="date">20 Eyl</span></div><div class="badge">Anma</div><h3 class="card-title">İbrahim Ayhan 8. yılında anıldı</h3><p class="card-content">Parti, İbrahim Ayhan’ı ölümünün 8. yılında andı ve mücadeleye devam mesajı verdi.</p><a class="card-link" href="https://x.com/DEMGenelMerkezi/status/2101576263861235755" target="_blank" rel="noopener">Habere Git →</a></article>
+      <article class="card"><div class="card-header"><span class="source">@DEMGenelMerkezi</span><span class="date">20 Eyl</span></div><div class="badge">Anma</div><h3 class="card-title">Musa Anter 34. yılında anıldı</h3><p class="card-content">DEM Parti, cinayetin hesabının sorulmasını ve geçmişle yüzleşilmesini istedi.</p><a class="card-link" href="https://x.com/DEMGenelMerkezi/status/2101559687804043480" target="_blank" rel="noopener">Habere Git →</a></article>
+      <article class="card"><div class="card-header"><span class="source">@DEMGenelMerkezi</span><span class="date">18 Eyl</span></div><div class="badge">Yayın</div><h3 class="card-title">Hatimoğulları İlke TV’ye çıktı</h3><p class="card-content">Tülay Hatimoğulları 18 Eylül 20.00’de İlke TV canlı yayınına katıldı.</p><a class="card-link" href="https://x.com/DEMGenelMerkezi/status/2100947957986017672" target="_blank" rel="noopener">Habere Git →</a></article>
+      <article class="card"><div class="card-header"><span class="source">@DEMGenelMerkezi</span><span class="date">17 Eyl</span></div><div class="badge">Açıklama</div><h3 class="card-title">Meclis erken toplanmalı çağrısı</h3><p class="card-content">Ekonomik kriz gerekçesiyle Meclis’in 1 Ekim’i beklemeden toplanması istendi.</p><a class="card-link" href="https://x.com/DEMGenelMerkezi/status/2100523468458508766" target="_blank" rel="noopener">Habere Git →</a></article>
     </div>
   </div>
-
-  <div class="main-section">
-    <h2 class="main-title">Haber Siteleri — son 2 hafta</h2>
-    <div class="section">
-      <h3 class="section-title">Ulusal / uluslararası medya</h3>
-      <div class="grid">
-        <article class="card"><div class="card-header"><span class="source">DW Türkçe</span><span class="date">14 Eyl</span></div><div class="badge">Süreç</div><h3 class="card-title">Öcalan: Amaç barış ve siyasallaşma</h3><p class="card-content">DEM Parti İmralı Heyeti’ne göre Öcalan, yasa sonrası somut adım ve kurulların çalışmasını istedi. Barışı silah bırakmaya, siyasallaşmayı demokratik siyasete bağladı.</p><a class="card-link" href="https://www.dw.com/tr/pkk-lideri-%C3%B6calandan-bar%C4%B1%C5%9F-ve-siyasalla%C5%9Fma-mesaj%C4%B1/a-79261195" target="_blank" rel="noopener">Habere Git →</a></article>
-        <article class="card"><div class="card-header"><span class="source">DW Türkçe</span><span class="date">17 Eyl</span></div><div class="badge">PJAK</div><h3 class="card-title">PJAK sürecin dışında mı kalacak?</h3><p class="card-content">DW’ye konuşan PJAK sözcüsü, Türkiye’deki silahsızlanma sürecinin kendilerini bağlamadığını söyledi; Tahran ile benzer bir süreci de kapatmadı.</p><a class="card-link" href="https://www.dw.com/tr/pkkdan-sonra-i%CC%87randa-pjak-da-silah-b%C4%B1rakacak-m%C4%B1/a-79305907" target="_blank" rel="noopener">Habere Git →</a></article>
-        <article class="card"><div class="card-header"><span class="source">Hürriyet Daily News</span><span class="date">8 Eyl</span></div><div class="badge">Silahsızlanma</div><h3 class="card-title">Kurtulmuş: Silah teslimi Ekim’de</h3><p class="card-content">TBMM Başkanı Numan Kurtulmuş, PKK’nın Ekim ayında silahlarını Irak merkezi hükümetine teslim etmeye başlayacağını söyledi.</p><a class="card-link" href="https://www.hurriyetdailynews.com/pkk-set-to-surrender-weapons-to-iraq-in-october-kurtulmus-226635" target="_blank" rel="noopener">Habere Git →</a></article>
-        <article class="card"><div class="card-header"><span class="source">Türkiye Today</span><span class="date">17 Eyl</span></div><div class="badge">İran</div><h3 class="card-title">İran bakanı PKK ve PJAK’a silah bırakın dedi</h3><p class="card-content">İran İçişleri Bakanı Momeni Ankara’da, PKK, PJAK ve tüm uzantılarının silah bırakıp varlığına son vermesini istedi.</p><a class="card-link" href="https://www.turkiyetoday.com/region/iranian-minister-calls-on-pkk-pjak-to-lay-down-arms-3228326" target="_blank" rel="noopener">Habere Git →</a></article>
-        <article class="card"><div class="card-header"><span class="source">Shafaq / NTV</span><span class="date">17 Eyl</span></div><div class="badge">Komite</div><h3 class="card-title">Öcalan silahsızlanma alt komitesinde olacak</h3><p class="card-content">Cumhurbaşkanlığı Başdanışmanı Mehmet Uçum, Öcalan’ın silahsızlanma alt komitesinde görev alacağını; bunun tahliye anlamına gelmediğini söyledi.</p><a class="card-link" href="https://shafaq.com/en/Kurdistan/Ocalan-to-join-PKK-disarmament-committee" target="_blank" rel="noopener">Habere Git →</a></article>
-        <article class="card"><div class="card-header"><span class="source">Turkish Minute</span><span class="date">18 Eyl</span></div><div class="badge">KCK</div><h3 class="card-title">Bayık: Öcalan özgür olmadan silah bırakmayız</h3><p class="card-content">Cemil Bayık, Öcalan serbest kalmadan silah bırakmayacaklarını ve Türkiye’ye dönmeyeceklerini söyledi; KCK’nin İmralı’ya gitmesini istedi.</p><a class="card-link" href="https://www.turkishminute.com/?p=186716" target="_blank" rel="noopener">Habere Git →</a></article>
-        <article class="card"><div class="card-header"><span class="source">Daily Sabah</span><span class="date">18 Eyl</span></div><div class="badge">Saha</div><h3 class="card-title">Ankara saha takibini sürdürüyor</h3><p class="card-content">Türkiye, Terörsüz Türkiye sürecinde sahadaki silahsızlanma ve tasfiye adımlarını yakından izlediğini duyurdu.</p><a class="card-link" href="https://www.dailysabah.com/search?query=pkk-disarmament" target="_blank" rel="noopener">Haber listesine Git →</a></article>
-        <article class="card"><div class="card-header"><span class="source">BBC Türkçe</span><span class="date">Dosya</span></div><div class="badge">PKK</div><h3 class="card-title">BBC PKK haber listesi</h3><p class="card-content">BBC Türkçe’nin PKK ve süreçle ilgili haber arşivi. Son 2 haftada yeni özel haber sınırlı.</p><a class="card-link" href="https://www.bbc.com/turkce/topics/cqldwxm2q0jt" target="_blank" rel="noopener">Haber listesine Git →</a></article>
-        <article class="card"><div class="card-header"><span class="source">TRT Haber</span><span class="date">Güncel</span></div><div class="badge">PKK</div><h3 class="card-title">TRT Haber PKK haberleri</h3><p class="card-content">TRT Haber’de PKK başlıklı güncel haber araması. Tek tek yeni manşetler buradan taranabilir.</p><a class="card-link" href="https://www.trthaber.com/arama.html?q=PKK" target="_blank" rel="noopener">Haber listesine Git →</a></article>
-      </div>
-    </div>
-    <div class="section">
-      <h3 class="section-title">ANF / Hawar / Serxwebûn</h3>
-      <div class="grid">
-        <article class="card"><div class="card-header"><span class="source">ANF</span><span class="date">20 Eyl</span></div><div class="badge">PYD</div><h3 class="card-title">PYD kuruluşu Silêmani’de kutlandı</h3><p class="card-content">ANF, PYD’nin kuruluş yıldönümü etkinliğinin Süleymaniye’de yapıldığını duyurdu.</p><a class="card-link" href="https://anf-news.com/latest-news" target="_blank" rel="noopener">Haber listesine Git →</a></article>
-        <article class="card"><div class="card-header"><span class="source">ANF</span><span class="date">20 Eyl</span></div><div class="badge">Anma</div><h3 class="card-title">Musa Anter katledildiği yerde anıldı</h3><p class="card-content">ANF, Musa Anter’in katledildiği yerde düzenlenen anmayı aktardı.</p><a class="card-link" href="https://anf-news.com/latest-news" target="_blank" rel="noopener">Haber listesine Git →</a></article>
-        <article class="card"><div class="card-header"><span class="source">Hawar News</span><span class="date">20 Eyl</span></div><div class="badge">PYD</div><h3 class="card-title">PYD 23. yıl etkinlikleri</h3><p class="card-content">Hawar News, PYD’nin 23. kuruluş yılı için Qamishlo, Derik, Til Temir ve Haseke’de program duyurdu.</p><a class="card-link" href="https://hawarnews.com/en/news" target="_blank" rel="noopener">Haber listesine Git →</a></article>
-        <article class="card"><div class="card-header"><span class="source">Serxwebûn</span><span class="date">Son 2 hafta</span></div><div class="badge">Site</div><h3 class="card-title">Serxwebûn’da son 2 haftada yeni sayı yok</h3><p class="card-content">Sitenin son görünen yazıları Haziran 2025 tarihli. Güncel kontrol için site haber akışına bakın.</p><a class="card-link" href="https://serxwebun.org/" target="_blank" rel="noopener">Site haberlerine Git →</a></article>
-      </div>
+  <div class="section">
+    <h3 class="section-title">Ağrı Belediyesi @agribelediye</h3>
+    <div class="grid">
+      <article class="card"><div class="card-header"><span class="source">@agribelediye</span><span class="date">18 Eyl</span></div><div class="badge">Altyapı</div><h3 class="card-title">Fatih Mahallesi’ne 1.280 metrelik menfez</h3><p class="card-content">Yağmur suyu tahliyesi için 1.280 metre menfez hattı döşendi.</p><a class="card-link" href="https://x.com/agribelediye/status/2100975231066132918" target="_blank" rel="noopener">Habere Git →</a></article>
+      <article class="card"><div class="card-header"><span class="source">@agribelediye</span><span class="date">18 Eyl</span></div><div class="badge">Hizmet</div><h3 class="card-title">Konteyner alanları atölyede üretiliyor</h3><p class="card-content">Üstü kapalı muhafaza alanları belediye atölyesinde yapılıp yerleştiriliyor.</p><a class="card-link" href="https://x.com/agribelediye/status/2100860047915925899" target="_blank" rel="noopener">Habere Git →</a></article>
+      <article class="card"><div class="card-header"><span class="source">@agribelediye</span><span class="date">17 Eyl</span></div><div class="badge">Ziyaret</div><h3 class="card-title">Memet Akkuş için başsağlığı ziyareti</h3><p class="card-content">Yeni Parti milletvekilleri merhum eşbaşkan için başsağlığına geldi.</p><a class="card-link" href="https://x.com/agribelediye/status/2100509966616461386" target="_blank" rel="noopener">Habere Git →</a></article>
+      <article class="card"><div class="card-header"><span class="source">@agribelediye</span><span class="date">16 Eyl</span></div><div class="badge">Yol</div><h3 class="card-title">Asfalt çalışması sürüyor</h3><p class="card-content">Kent genelinde asfalt çalışmaları program dahilinde devam ediyor.</p><a class="card-link" href="https://x.com/agribelediye/status/2100205814803747190" target="_blank" rel="noopener">Habere Git →</a></article>
     </div>
   </div>
-
-  <footer>TEM BÜLTEN • Son 2 hafta • Kaynak linkleri doğrudan habere gider</footer>
+  <div class="section">
+    <h3 class="section-title">Ağrı Belediye Eşbaşkanı @HazalAras04</h3>
+    <div class="grid">
+      <article class="card"><div class="card-header"><span class="source">@HazalAras04</span><span class="date">17 Eyl</span></div><div class="badge">Saha</div><h3 class="card-title">Parke taşı çalışmaları yerinde incelendi</h3><p class="card-content">Hazal Aras parke taşı döşeme işlerini sahada denetledi.</p><a class="card-link" href="https://x.com/HazalAras04/status/2100584754693222546" target="_blank" rel="noopener">Habere Git →</a></article>
+    </div>
+  </div>
+  <h2 class="main-title">Haber Siteleri — son 2 hafta</h2>
+  <div class="section">
+    <h3 class="section-title">Ulusal / uluslararası medya</h3>
+    <div class="grid">
+      <article class="card"><div class="card-header"><span class="source">DW Türkçe</span><span class="date">14 Eyl</span></div><div class="badge">Süreç</div><h3 class="card-title">Öcalan: Amaç barış ve siyasallaşma</h3><p class="card-content">Öcalan yasa sonrası somut adım istedi. Barışı silah bırakmaya, siyasallaşmayı demokratik siyasete bağladı.</p><a class="card-link" href="https://www.dw.com/tr/pkk-lideri-%C3%B6calandan-bar%C4%B1%C5%9F-ve-siyasalla%C5%9Fma-mesaj%C4%B1/a-79261195" target="_blank" rel="noopener">Habere Git →</a></article>
+      <article class="card"><div class="card-header"><span class="source">DW Türkçe</span><span class="date">17 Eyl</span></div><div class="badge">PJAK</div><h3 class="card-title">PJAK sürecin dışında mı kalacak?</h3><p class="card-content">PJAK sözcüsü, Türkiye’deki silahsızlanma sürecinin kendilerini bağlamadığını söyledi.</p><a class="card-link" href="https://www.dw.com/tr/pkkdan-sonra-i%CC%87randa-pjak-da-silah-b%C4%B1rakacak-m%C4%B1/a-79305907" target="_blank" rel="noopener">Habere Git →</a></article>
+      <article class="card"><div class="card-header"><span class="source">Hürriyet Daily News</span><span class="date">8 Eyl</span></div><div class="badge">Silahsızlanma</div><h3 class="card-title">Kurtulmuş: Silah teslimi Ekim’de</h3><p class="card-content">Kurtulmuş, PKK’nın Ekim’de silahlarını Irak merkezi hükümetine teslim etmeye başlayacağını söyledi.</p><a class="card-link" href="https://www.hurriyetdailynews.com/pkk-set-to-surrender-weapons-to-iraq-in-october-kurtulmus-226635" target="_blank" rel="noopener">Habere Git →</a></article>
+      <article class="card"><div class="card-header"><span class="source">Türkiye Today</span><span class="date">17 Eyl</span></div><div class="badge">İran</div><h3 class="card-title">İran bakanı PKK ve PJAK’a silah bırakın dedi</h3><p class="card-content">İran İçişleri Bakanı Ankara’da tüm uzantıların silah bırakmasını istedi.</p><a class="card-link" href="https://www.turkiyetoday.com/region/iranian-minister-calls-on-pkk-pjak-to-lay-down-arms-3228326" target="_blank" rel="noopener">Habere Git →</a></article>
+      <article class="card"><div class="card-header"><span class="source">Shafaq / NTV</span><span class="date">17 Eyl</span></div><div class="badge">Komite</div><h3 class="card-title">Öcalan silahsızlanma alt komitesinde olacak</h3><p class="card-content">Uçum, Öcalan’ın alt komitede görev alacağını; bunun tahliye olmadığını söyledi.</p><a class="card-link" href="https://shafaq.com/en/Kurdistan/Ocalan-to-join-PKK-disarmament-committee" target="_blank" rel="noopener">Habere Git →</a></article>
+      <article class="card"><div class="card-header"><span class="source">Turkish Minute</span><span class="date">18 Eyl</span></div><div class="badge">KCK</div><h3 class="card-title">Bayık: Öcalan özgür olmadan silah bırakmayız</h3><p class="card-content">Cemil Bayık, Öcalan serbest kalmadan silah bırakmayacaklarını söyledi.</p><a class="card-link" href="https://www.turkishminute.com/?p=186716" target="_blank" rel="noopener">Habere Git →</a></article>
+      <article class="card"><div class="card-header"><span class="source">BBC Türkçe</span><span class="date">Dosya</span></div><div class="badge">PKK</div><h3 class="card-title">BBC PKK haber listesi</h3><p class="card-content">BBC Türkçe PKK ve süreç haber arşivi.</p><a class="card-link" href="https://www.bbc.com/turkce/topics/cqldwxm2q0jt" target="_blank" rel="noopener">Haber listesine Git →</a></article>
+      <article class="card"><div class="card-header"><span class="source">TRT Haber</span><span class="date">Güncel</span></div><div class="badge">PKK</div><h3 class="card-title">TRT Haber PKK haberleri</h3><p class="card-content">TRT Haber PKK arama sonuçları.</p><a class="card-link" href="https://www.trthaber.com/arama.html?q=PKK" target="_blank" rel="noopener">Haber listesine Git →</a></article>
+    </div>
+  </div>
+  <div class="section">
+    <h3 class="section-title">ANF / Hawar / Serxwebûn</h3>
+    <div class="grid">
+      <article class="card"><div class="card-header"><span class="source">ANF</span><span class="date">20 Eyl</span></div><div class="badge">PYD</div><h3 class="card-title">PYD kuruluşu Silêmani’de kutlandı</h3><p class="card-content">ANF, yıldönümü etkinliğinin Süleymaniye’de yapıldığını duyurdu.</p><a class="card-link" href="https://anf-news.com/latest-news" target="_blank" rel="noopener">Haber listesine Git →</a></article>
+      <article class="card"><div class="card-header"><span class="source">Hawar News</span><span class="date">20 Eyl</span></div><div class="badge">PYD</div><h3 class="card-title">PYD 23. yıl etkinlikleri</h3><p class="card-content">Qamishlo, Derik, Til Temir ve Haseke’de program duyuruldu.</p><a class="card-link" href="https://hawarnews.com/en/news" target="_blank" rel="noopener">Haber listesine Git →</a></article>
+      <article class="card"><div class="card-header"><span class="source">Serxwebûn</span><span class="date">Son 2 hafta</span></div><div class="badge">Site</div><h3 class="card-title">Serxwebûn’da son 2 haftada yeni sayı yok</h3><p class="card-content">Son görünen yazılar Haziran 2025 tarihli. Güncel kontrol için siteye bakın.</p><a class="card-link" href="https://serxwebun.org/" target="_blank" rel="noopener">Site haberlerine Git →</a></article>
+    </div>
+  </div>
+  <footer>TEM BÜLTEN • Turkuaz tema • Sol tarafta Türkiye bayrağı</footer>
 </div>
 </div>
-
 <script>
   const PASSWORD = "184504";
   const loginScreen = document.getElementById("login-screen");
