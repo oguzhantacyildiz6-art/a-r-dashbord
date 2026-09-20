@@ -12,7 +12,6 @@
       --text: #e2e8f0;
       --muted: #94a3b8;
       --accent: #38bdf8;
-      --green: #4ade80;
       --purple: #a78bfa;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -23,30 +22,14 @@
       line-height: 1.5;
       padding: 20px;
     }
-    .container { max-width: 1100px; margin: 0 auto; }
-    header {
-      text-align: center;
-      margin-bottom: 36px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid var(--border);
-    }
-    header h1 {
-      font-size: 2rem;
-      letter-spacing: 1px;
-      margin-bottom: 6px;
-      color: #fff;
-    }
+    .container { max-width: 1100px; margin: 0 auto; display: none; }
+    .container.show { display: block; }
+    header { text-align: center; margin-bottom: 36px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+    header h1 { font-size: 2rem; letter-spacing: 1px; margin-bottom: 6px; color: #fff; }
     header p { color: var(--muted); font-size: 0.95rem; }
     .last-update { color: var(--accent); font-size: 0.85rem; margin-top: 8px; }
     .main-section { margin-bottom: 48px; }
-    .main-title {
-      font-size: 1.4rem;
-      margin-bottom: 20px;
-      padding: 12px 16px;
-      background: linear-gradient(90deg, #1e3a5f, #0f172a);
-      border-left: 4px solid var(--accent);
-      border-radius: 0 8px 8px 0;
-    }
+    .main-title { font-size: 1.4rem; margin-bottom: 20px; padding: 12px 16px; background: linear-gradient(90deg, #1e3a5f, #0f172a); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; }
     .main-title.haber { border-left-color: var(--purple); }
     .section { margin-bottom: 28px; }
     .section-title { font-size: 1.05rem; margin-bottom: 12px; color: var(--muted); font-weight: 500; }
@@ -61,10 +44,42 @@
     .card-link.haber-link { background: #7c3aed; }
     .badge { display: inline-block; font-size: 0.68rem; padding: 2px 8px; border-radius: 999px; background: #1e3a5f; color: var(--accent); margin-bottom: 8px; }
     footer { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.85rem; }
+
+    #login-screen {
+      position: fixed; inset: 0; background: #0b1220;
+      display: flex; align-items: center; justify-content: center; z-index: 9999;
+    }
+    .login-box {
+      width: 100%; max-width: 360px; background: #1e293b;
+      border: 1px solid #334155; border-radius: 16px; padding: 28px 24px; text-align: center;
+    }
+    .login-box h2 { margin-bottom: 6px; }
+    .login-box p { color: #94a3b8; font-size: 0.9rem; margin-bottom: 18px; }
+    .login-box input {
+      width: 100%; padding: 12px 14px; border-radius: 8px; border: 1px solid #334155;
+      background: #0f172a; color: #fff; font-size: 1rem; margin-bottom: 12px;
+    }
+    .login-box button {
+      width: 100%; padding: 12px; border: 0; border-radius: 8px;
+      background: #0ea5e9; color: #fff; font-weight: 700; cursor: pointer; font-size: 1rem;
+    }
+    .login-error { color: #f87171; font-size: 0.85rem; min-height: 20px; margin-top: 8px; }
   </style>
 </head>
 <body>
-  <div class="container">
+  <div id="login-screen">
+    <div class="login-box">
+      <h2>TEM BÜLTEN</h2>
+      <p>Şifreyi girerek devam edin</p>
+      <form id="login-form">
+        <input id="password" type="password" placeholder="Şifre" autocomplete="current-password" />
+        <button type="submit">Giriş Yap</button>
+      </form>
+      <div class="login-error" id="login-error"></div>
+    </div>
+  </div>
+
+  <div class="container" id="app">
     <header>
       <h1>TEM BÜLTEN</h1>
       <p>DEM Parti • Ağrı Belediyesi • Ağrı DEM • Haber Kaynakları</p>
@@ -72,119 +87,38 @@
     </header>
 
     <div class="main-section">
-      <h2 class="main-title sosyal">Sosyal Medya</h2>
+      <h2 class="main-title">Sosyal Medya</h2>
       <div class="section">
         <h3 class="section-title">DEM Parti Resmi @DEMGenelMerkezi</h3>
         <div class="grid">
-          <article class="card">
-            <div class="card-header"><span class="source">@DEMGenelMerkezi</span><span class="date">20 Eyl 2026</span></div>
-            <div class="badge">Anma</div>
-            <h3 class="card-title">İbrahim Ayhan anıldı</h3>
-            <p class="card-content">Yaşamını demokrasi ve özgürlük mücadelesine adayan yoldaşımız İbrahim Ayhan’ı 8. yılında anıyoruz.</p>
-            <a class="card-link" href="https://x.com/DEMGenelMerkezi/status/2101576263861235755" target="_blank" rel="noopener">X'te Aç →</a>
-          </article>
-          <article class="card">
-            <div class="card-header"><span class="source">@DEMGenelMerkezi</span><span class="date">20 Eyl 2026</span></div>
-            <div class="badge">Anma</div>
-            <h3 class="card-title">Apê Musa’nın 34. yılı</h3>
-            <p class="card-content">Özgür basın geleneğinin çınarı Apê Musa 34 yıl önce katledildi.</p>
-            <a class="card-link" href="https://x.com/DEMGenelMerkezi/status/2101559687804043480" target="_blank" rel="noopener">X'te Aç →</a>
-          </article>
-          <article class="card">
-            <div class="card-header"><span class="source">@DEMGenelMerkezi</span><span class="date">18 Eyl 2026</span></div>
-            <div class="badge">Duyuru</div>
-            <h3 class="card-title">Tülay Hatimoğulları İlke TV’de</h3>
-            <p class="card-content">Eş Genel Başkan Tülay Hatimoğulları, 18 Eylül Cuma saat 20:00'de İlke TV canlı yayın konuğu olacaktır.</p>
-            <a class="card-link" href="https://x.com/DEMGenelMerkezi/status/2100947957986017672" target="_blank" rel="noopener">X'te Aç →</a>
-          </article>
-          <article class="card">
-            <div class="card-header"><span class="source">@DEMGenelMerkezi</span><span class="date">17 Eyl 2026</span></div>
-            <div class="badge">Açıklama</div>
-            <h3 class="card-title">Ekonomik kriz – Meclis toplanmalı</h3>
-            <p class="card-content">Ekonomik krizin bedeli büyüyor, Meclis 1 Ekim’i beklemeden toplanmalıdır.</p>
-            <a class="card-link" href="https://x.com/DEMGenelMerkezi/status/2100523468458508766" target="_blank" rel="noopener">X'te Aç →</a>
-          </article>
+          <article class="card"><div class="card-header"><span class="source">@DEMGenelMerkezi</span><span class="date">20 Eyl 2026</span></div><div class="badge">Anma</div><h3 class="card-title">İbrahim Ayhan anıldı</h3><p class="card-content">Yaşamını demokrasi ve özgürlük mücadelesine adayan yoldaşımız İbrahim Ayhan’ı 8. yılında anıyoruz.</p><a class="card-link" href="https://x.com/DEMGenelMerkezi/status/2101576263861235755" target="_blank" rel="noopener">X'te Aç →</a></article>
+          <article class="card"><div class="card-header"><span class="source">@DEMGenelMerkezi</span><span class="date">20 Eyl 2026</span></div><div class="badge">Anma</div><h3 class="card-title">Apê Musa’nın 34. yılı</h3><p class="card-content">Özgür basın geleneğinin çınarı Apê Musa 34 yıl önce katledildi.</p><a class="card-link" href="https://x.com/DEMGenelMerkezi/status/2101559687804043480" target="_blank" rel="noopener">X'te Aç →</a></article>
+          <article class="card"><div class="card-header"><span class="source">@DEMGenelMerkezi</span><span class="date">18 Eyl 2026</span></div><div class="badge">Duyuru</div><h3 class="card-title">Tülay Hatimoğulları İlke TV’de</h3><p class="card-content">Eş Genel Başkan Tülay Hatimoğulları, 18 Eylül Cuma saat 20:00'de İlke TV canlı yayın konuğu olacaktır.</p><a class="card-link" href="https://x.com/DEMGenelMerkezi/status/2100947957986017672" target="_blank" rel="noopener">X'te Aç →</a></article>
+          <article class="card"><div class="card-header"><span class="source">@DEMGenelMerkezi</span><span class="date">17 Eyl 2026</span></div><div class="badge">Açıklama</div><h3 class="card-title">Ekonomik kriz – Meclis toplanmalı</h3><p class="card-content">Ekonomik krizin bedeli büyüyor, Meclis 1 Ekim’i beklemeden toplanmalıdır.</p><a class="card-link" href="https://x.com/DEMGenelMerkezi/status/2100523468458508766" target="_blank" rel="noopener">X'te Aç →</a></article>
         </div>
       </div>
-
       <div class="section">
         <h3 class="section-title">Ağrı DEM Parti @agr_hdp</h3>
         <div class="grid">
-          <article class="card">
-            <div class="card-header"><span class="source">@agr_hdp</span><span class="date">16 Ağu 2026</span></div>
-            <div class="badge">Kongre</div>
-            <h3 class="card-title">Merkez İlçe Kongresi gerçekleştirildi</h3>
-            <p class="card-content">DEM Parti Ağrı Merkez İlçe Kongresi gerçekleştirildi.</p>
-            <a class="card-link" href="https://x.com/agr_hdp/status/2089027383294591126" target="_blank" rel="noopener">X'te Aç →</a>
-          </article>
-          <article class="card">
-            <div class="card-header"><span class="source">@agr_hdp</span><span class="date">14 Ağu 2026</span></div>
-            <div class="badge">Duyuru</div>
-            <h3 class="card-title">Merkez İlçe Kongresi’ne davet</h3>
-            <p class="card-content">Barış ve Demokratik Toplum İçin Örgütleniyoruz şiarıyla kongreye davet.</p>
-            <a class="card-link" href="https://x.com/agr_hdp/status/2088299977625760208" target="_blank" rel="noopener">X'te Aç →</a>
-          </article>
-          <article class="card">
-            <div class="card-header"><span class="source">@agr_hdp</span><span class="date">11 Ağu 2026</span></div>
-            <div class="badge">Haber</div>
-            <h3 class="card-title">Yayla anlaşmazlığı barışla çözüldü</h3>
-            <p class="card-content">Taşlıçay’da Kûmîrcî ve Mardik köyleri arasındaki yayla anlaşmazlığı çözüldü.</p>
-            <a class="card-link" href="https://x.com/agr_hdp/status/2087071919342244167" target="_blank" rel="noopener">X'te Aç →</a>
-          </article>
+          <article class="card"><div class="card-header"><span class="source">@agr_hdp</span><span class="date">16 Ağu 2026</span></div><div class="badge">Kongre</div><h3 class="card-title">Merkez İlçe Kongresi gerçekleştirildi</h3><p class="card-content">DEM Parti Ağrı Merkez İlçe Kongresi gerçekleştirildi.</p><a class="card-link" href="https://x.com/agr_hdp/status/2089027383294591126" target="_blank" rel="noopener">X'te Aç →</a></article>
+          <article class="card"><div class="card-header"><span class="source">@agr_hdp</span><span class="date">14 Ağu 2026</span></div><div class="badge">Duyuru</div><h3 class="card-title">Merkez İlçe Kongresi’ne davet</h3><p class="card-content">Barış ve Demokratik Toplum İçin Örgütleniyoruz şiarıyla kongreye davet.</p><a class="card-link" href="https://x.com/agr_hdp/status/2088299977625760208" target="_blank" rel="noopener">X'te Aç →</a></article>
+          <article class="card"><div class="card-header"><span class="source">@agr_hdp</span><span class="date">11 Ağu 2026</span></div><div class="badge">Haber</div><h3 class="card-title">Yayla anlaşmazlığı barışla çözüldü</h3><p class="card-content">Taşlıçay’da Kûmîrcî ve Mardik köyleri arasındaki yayla anlaşmazlığı çözüldü.</p><a class="card-link" href="https://x.com/agr_hdp/status/2087071919342244167" target="_blank" rel="noopener">X'te Aç →</a></article>
         </div>
       </div>
-
       <div class="section">
         <h3 class="section-title">Ağrı Belediyesi @agribelediye</h3>
         <div class="grid">
-          <article class="card">
-            <div class="card-header"><span class="source">@agribelediye</span><span class="date">18 Eyl 2026</span></div>
-            <div class="badge">Altyapı</div>
-            <h3 class="card-title">Fatih Mahallesi menfez hattı</h3>
-            <p class="card-content">Fatih Mahallesi’nde 1.280 metre menfez hattı oluşturuldu.</p>
-            <a class="card-link" href="https://x.com/agribelediye/status/2100975231066132918" target="_blank" rel="noopener">X'te Aç →</a>
-          </article>
-          <article class="card">
-            <div class="card-header"><span class="source">@agribelediye</span><span class="date">18 Eyl 2026</span></div>
-            <div class="badge">Hizmet</div>
-            <h3 class="card-title">Çöp konteyner alanları üretiliyor</h3>
-            <p class="card-content">Belediye atölyesinde çöp konteyner muhafaza alanları üretiliyor.</p>
-            <a class="card-link" href="https://x.com/agribelediye/status/2100860047915925899" target="_blank" rel="noopener">X'te Aç →</a>
-          </article>
-          <article class="card">
-            <div class="card-header"><span class="source">@agribelediye</span><span class="date">17 Eyl 2026</span></div>
-            <div class="badge">Ziyaret</div>
-            <h3 class="card-title">Memet Akkuş için başsağlığı ziyareti</h3>
-            <p class="card-content">Yeni Parti milletvekilleri Memet Akkuş için başsağlığı ziyaretinde bulundu.</p>
-            <a class="card-link" href="https://x.com/agribelediye/status/2100509966616461386" target="_blank" rel="noopener">X'te Aç →</a>
-          </article>
-          <article class="card">
-            <div class="card-header"><span class="source">@agribelediye</span><span class="date">16 Eyl 2026</span></div>
-            <div class="badge">Yol</div>
-            <h3 class="card-title">Asfalt çalışmaları devam ediyor</h3>
-            <p class="card-content">Ağrı’da asfalt çalışmaları program dahilinde sürüyor.</p>
-            <a class="card-link" href="https://x.com/agribelediye/status/2100205814803747190" target="_blank" rel="noopener">X'te Aç →</a>
-          </article>
+          <article class="card"><div class="card-header"><span class="source">@agribelediye</span><span class="date">18 Eyl 2026</span></div><div class="badge">Altyapı</div><h3 class="card-title">Fatih Mahallesi menfez hattı</h3><p class="card-content">Fatih Mahallesi’nde 1.280 metre menfez hattı oluşturuldu.</p><a class="card-link" href="https://x.com/agribelediye/status/2100975231066132918" target="_blank" rel="noopener">X'te Aç →</a></article>
+          <article class="card"><div class="card-header"><span class="source">@agribelediye</span><span class="date">18 Eyl 2026</span></div><div class="badge">Hizmet</div><h3 class="card-title">Çöp konteyner alanları üretiliyor</h3><p class="card-content">Belediye atölyesinde çöp konteyner muhafaza alanları üretiliyor.</p><a class="card-link" href="https://x.com/agribelediye/status/2100860047915925899" target="_blank" rel="noopener">X'te Aç →</a></article>
+          <article class="card"><div class="card-header"><span class="source">@agribelediye</span><span class="date">17 Eyl 2026</span></div><div class="badge">Ziyaret</div><h3 class="card-title">Memet Akkuş için başsağlığı ziyareti</h3><p class="card-content">Yeni Parti milletvekilleri Memet Akkuş için başsağlığı ziyaretinde bulundu.</p><a class="card-link" href="https://x.com/agribelediye/status/2100509966616461386" target="_blank" rel="noopener">X'te Aç →</a></article>
+          <article class="card"><div class="card-header"><span class="source">@agribelediye</span><span class="date">16 Eyl 2026</span></div><div class="badge">Yol</div><h3 class="card-title">Asfalt çalışmaları devam ediyor</h3><p class="card-content">Ağrı’da asfalt çalışmaları program dahilinde sürüyor.</p><a class="card-link" href="https://x.com/agribelediye/status/2100205814803747190" target="_blank" rel="noopener">X'te Aç →</a></article>
         </div>
       </div>
-
       <div class="section">
         <h3 class="section-title">Ağrı Belediye Eşbaşkanı @HazalAras04</h3>
         <div class="grid">
-          <article class="card">
-            <div class="card-header"><span class="source">@HazalAras04</span><span class="date">17 Eyl 2026</span></div>
-            <div class="badge">Saha</div>
-            <h3 class="card-title">Parke taşı çalışmalarını inceledi</h3>
-            <p class="card-content">Kent genelindeki parke taşı çalışmaları yerinde incelendi.</p>
-            <a class="card-link" href="https://x.com/HazalAras04/status/2100584754693222546" target="_blank" rel="noopener">X'te Aç →</a>
-          </article>
-          <article class="card">
-            <div class="card-header"><span class="source">@HazalAras04</span><span class="date">5 Eyl 2026</span></div>
-            <div class="badge">Anma</div>
-            <h3 class="card-title">Şîna me heye… Yastayız</h3>
-            <p class="card-content">Eşbaşkan Memet Akkuş’un vefatı nedeniyle yas mesajı.</p>
-            <a class="card-link" href="https://x.com/HazalAras04/status/2096340530347004199" target="_blank" rel="noopener">X'te Aç →</a>
-          </article>
+          <article class="card"><div class="card-header"><span class="source">@HazalAras04</span><span class="date">17 Eyl 2026</span></div><div class="badge">Saha</div><h3 class="card-title">Parke taşı çalışmalarını inceledi</h3><p class="card-content">Kent genelindeki parke taşı çalışmaları yerinde incelendi.</p><a class="card-link" href="https://x.com/HazalAras04/status/2100584754693222546" target="_blank" rel="noopener">X'te Aç →</a></article>
+          <article class="card"><div class="card-header"><span class="source">@HazalAras04</span><span class="date">5 Eyl 2026</span></div><div class="badge">Anma</div><h3 class="card-title">Şîna me heye… Yastayız</h3><p class="card-content">Eşbaşkan Memet Akkuş’un vefatı nedeniyle yas mesajı.</p><a class="card-link" href="https://x.com/HazalAras04/status/2096340530347004199" target="_blank" rel="noopener">X'te Aç →</a></article>
         </div>
       </div>
     </div>
@@ -192,33 +126,40 @@
     <div class="main-section">
       <h2 class="main-title haber">Haber Siteleri</h2>
       <div class="grid">
-        <article class="card">
-          <div class="card-header"><span class="source">Hawar News (ANHA)</span><span class="date">Güncel</span></div>
-          <div class="badge">Rojava / Suriye</div>
-          <h3 class="card-title">Hawar News Agency</h3>
-          <p class="card-content">Kuzey ve Doğu Suriye’den güncel haberler.</p>
-          <a class="card-link haber-link" href="https://hawarnews.com/en" target="_blank" rel="noopener">Siteye Git →</a>
-        </article>
-        <article class="card">
-          <div class="card-header"><span class="source">ANF</span><span class="date">Güncel</span></div>
-          <div class="badge">Haber Ajansı</div>
-          <h3 class="card-title">Fırat Haber Ajansı (ANF)</h3>
-          <p class="card-content">Kürtçe, Türkçe ve diğer dillerde haber yayınlayan ajans.</p>
-          <a class="card-link haber-link" href="https://anfenglish.com" target="_blank" rel="noopener">Siteye Git →</a>
-        </article>
-        <article class="card">
-          <div class="card-header"><span class="source">ANF Türkçe</span><span class="date">Güncel</span></div>
-          <div class="badge">Alternatif</div>
-          <h3 class="card-title">ANF Türkçe Haberler</h3>
-          <p class="card-content">ANF’nin Türkçe yayın yaptığı alternatif erişim noktası.</p>
-          <a class="card-link haber-link" href="https://anf-news.com" target="_blank" rel="noopener">Siteye Git →</a>
-        </article>
+        <article class="card"><div class="card-header"><span class="source">Hawar News (ANHA)</span><span class="date">Güncel</span></div><div class="badge">Rojava / Suriye</div><h3 class="card-title">Hawar News Agency</h3><p class="card-content">Kuzey ve Doğu Suriye’den güncel haberler.</p><a class="card-link haber-link" href="https://hawarnews.com/en" target="_blank" rel="noopener">Siteye Git →</a></article>
+        <article class="card"><div class="card-header"><span class="source">ANF</span><span class="date">Güncel</span></div><div class="badge">Haber Ajansı</div><h3 class="card-title">Fırat Haber Ajansı (ANF)</h3><p class="card-content">Kürtçe, Türkçe ve diğer dillerde haber yayınlayan ajans.</p><a class="card-link haber-link" href="https://anfenglish.com" target="_blank" rel="noopener">Siteye Git →</a></article>
+        <article class="card"><div class="card-header"><span class="source">ANF Türkçe</span><span class="date">Güncel</span></div><div class="badge">Alternatif</div><h3 class="card-title">ANF Türkçe Haberler</h3><p class="card-content">ANF’nin Türkçe yayın yaptığı alternatif erişim noktası.</p><a class="card-link haber-link" href="https://anf-news.com" target="_blank" rel="noopener">Siteye Git →</a></article>
       </div>
     </div>
-
-    <footer>
-      <p><strong>TEM BÜLTEN</strong> • Sosyal Medya + Haber Siteleri</p>
-    </footer>
+    <footer><p><strong>TEM BÜLTEN</strong> • Sosyal Medya + Haber Siteleri</p></footer>
   </div>
+
+  <script>
+    const PASSWORD = "184504";
+    const loginScreen = document.getElementById("login-screen");
+    const app = document.getElementById("app");
+    const form = document.getElementById("login-form");
+    const errorBox = document.getElementById("login-error");
+
+    function openApp() {
+      loginScreen.style.display = "none";
+      app.classList.add("show");
+    }
+
+    if (sessionStorage.getItem("tem_ok") === "1") {
+      openApp();
+    }
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const value = document.getElementById("password").value.trim();
+      if (value === PASSWORD) {
+        sessionStorage.setItem("tem_ok", "1");
+        openApp();
+      } else {
+        errorBox.textContent = "Şifre yanlış";
+      }
+    });
+  </script>
 </body>
 </html>
