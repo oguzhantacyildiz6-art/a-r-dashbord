@@ -17,6 +17,8 @@ KEYWORDS = (
     "dem parti", "rojava", "qandil",
 )
 
+ORG_SOURCES = {"ANF", "Hawar News", "Serxwebun"}
+
 X_ACCOUNTS = [
     ("@DEMGenelMerkezi", "DEMGenelMerkezi"),
     ("@agribelediye", "agribelediye"),
@@ -42,7 +44,7 @@ def load_data():
                 return json.load(f)
         except Exception:
             pass
-    return {"last_scan": None, "social": [], "news": []}
+    return {"last_scan": None, "social": [], "news_org": [], "news_other": []}
 
 
 def save_data(data):
@@ -66,7 +68,7 @@ def strip_tags(text):
 
 
 def relevant(text):
-    t = (text or "").lower().replace("ö", "o").replace("ı", "i")
+    t = (text or "").lower().replace("\u00f6", "o").replace("\u0131", "i")
     return any(k in t for k in KEYWORDS)
 
 
@@ -126,6 +128,7 @@ def scan_news():
         ("Google Haber", "https://news.google.com/rss/search?q=PKK+OR+PYD+OR+PJAK+OR+Ocalan&hl=tr&gl=TR&ceid=TR:tr", True),
         ("DW Turkce", "https://rss.dw.com/rdf/rss-tur-all", True),
         ("BBC Turkce", "https://feeds.bbci.co.uk/turkce/rss.xml", True),
+        ("TRT Haber", "https://www.trthaber.com/arama.html?q=PKK", False),
     ]
     out = []
     for name, url, is_rss in sources:
@@ -134,16 +137,18 @@ def scan_news():
             rows = parse_rss(raw) if is_rss else scrape_links(raw.decode("utf-8", "ignore"), url)
             for row in rows:
                 blob = row["title"] + " " + row.get("summary", "")
-                if name in ("DW Turkce", "BBC Turkce", "Google Haber") and not relevant(blob):
+                if name in ("DW Turkce", "BBC Turkce", "Google Haber", "TRT Haber") and not relevant(blob):
                     continue
+                group = "org" if name in ORG_SOURCES else "other"
                 out.append({
                     "section": "news",
+                    "group": group,
                     "source": name,
                     "title": row["title"][:160],
                     "summary": (row.get("summary") or row["title"])[:280],
                     "url": row["url"],
                     "date": row.get("date") or now_tr().strftime("%d.%m %H:%M"),
-                    "badge": "Canli",
+                    "badge": "Orgut" if group == "org" else "Medya",
                 })
         except Exception:
             continue
@@ -201,6 +206,8 @@ def run_scan():
     news = scan_news()
     social = scan_x()
     if news:
+        data["news_org"] = [x for x in news if x.get("group") == "org"][:50]
+        data["news_other"] = [x for x in news if x.get("group") != "org"][:50]
         data["news"] = news[:80]
     if social:
         data["social"] = social[:40]
