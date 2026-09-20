@@ -5,31 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TEM BÜLTEN</title>
 <style>
-  :root { --tq:#0d9488; --tq-dark:#0f766e; --tq-soft:#ccfbf1; --white:#fff; --ink:#134e4a; --muted:#5b6e6c; --flag:#559EE2; }
+  :root { --tq:#0d9488; --tq-dark:#0f766e; --tq-soft:#ccfbf1; --ink:#134e4a; --muted:#5b6e6c; --flag:#0099FF; }
   * { box-sizing:border-box; margin:0; padding:0; }
   body { font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; background:#e6fffa; color:var(--ink); line-height:1.5; }
   .flag-bar {
-    position:fixed; left:0; top:0; bottom:0; width:150px;
-    background:var(--flag); display:flex; align-items:center; justify-content:center;
-    padding:20px 12px; z-index:20;
+    position:fixed; left:0; top:0; bottom:0; width:110px;
+    background:var(--flag); z-index:20; padding:0;
   }
-  .emblem {
-    width:100%; aspect-ratio:3/2; border-radius:12px; overflow:hidden;
-    box-shadow:0 8px 22px rgba(0,0,0,.28); border:3px solid #fff;
-    background:var(--flag);
-  }
+  .emblem { width:100%; height:100%; overflow:hidden; }
   .emblem svg { width:100%; height:100%; display:block; }
-  .wrap { margin-left:150px; padding:22px 18px 40px; }
-  .container { max-width:1080px; margin:0 auto; display:none; }
+  .wrap { margin-left:110px; padding:16px 16px 36px; }
+  .container { width:100%; max-width:none; display:none; }
   .container.show { display:block; }
-  header { background:linear-gradient(135deg,#0d9488,#14b8a6); color:#fff; border-radius:14px; padding:22px 20px 18px; margin-bottom:22px; }
-  header h1 { font-size:2rem; }
+  header { background:linear-gradient(135deg,#0d9488,#14b8a6); color:#fff; border-radius:14px; padding:20px 18px 16px; margin-bottom:18px; }
+  header h1 { font-size:1.9rem; }
   header p { opacity:.95; margin-top:4px; }
   .last-update { font-size:.85rem; margin-top:8px; color:#ccfbf1; }
   .main-title { background:var(--tq); color:#fff; padding:10px 14px; border-radius:8px; margin:8px 0 14px; font-size:1.2rem; }
-  .section { margin-bottom:24px; }
+  .section { margin-bottom:22px; }
   .section-title { color:var(--tq-dark); font-size:1.02rem; margin-bottom:10px; font-weight:700; }
-  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:12px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:12px; }
   .card { background:#fff; border:1px solid #99f6e4; border-left:5px solid var(--tq); border-radius:10px; padding:14px; }
   .card-header { display:flex; justify-content:space-between; gap:8px; margin-bottom:6px; font-size:.8rem; }
   .source { color:var(--tq-dark); font-weight:700; }
@@ -38,35 +33,39 @@
   .card-title { font-size:1.02rem; font-weight:800; margin-bottom:6px; }
   .card-content { font-size:.9rem; color:#333; margin-bottom:12px; }
   .card-link { display:inline-block; background:var(--tq); color:#fff; text-decoration:none; font-weight:700; font-size:.84rem; padding:7px 12px; border-radius:7px; }
-  footer { text-align:center; margin-top:28px; color:var(--muted); font-size:.85rem; }
+  footer { text-align:center; margin-top:24px; color:var(--muted); font-size:.85rem; }
   #login-screen { position:fixed; inset:0; background:linear-gradient(160deg,#0d9488,#115e59); display:flex; align-items:center; justify-content:center; z-index:50; }
-  .login-box { width:100%; max-width:360px; background:#fff; border-radius:16px; padding:28px 22px; text-align:center; }
+  .login-box { width:100%; max-width:380px; background:#fff; border-radius:16px; padding:28px 22px; text-align:center; }
   .login-box h2 { color:var(--tq-dark); }
   .login-box p { color:#555; margin:8px 0 16px; }
-  .login-emblem { width:140px; aspect-ratio:3/2; border-radius:10px; overflow:hidden; margin:0 auto 12px; border:3px solid #ccfbf1; background:var(--flag); }
+  .login-emblem { width:220px; height:146px; border-radius:8px; overflow:hidden; margin:0 auto 14px; border:3px solid #ccfbf1; background:var(--flag); }
   .login-emblem svg { width:100%; height:100%; display:block; }
   .login-box input, .login-box button { width:100%; padding:12px; border-radius:8px; font-size:1rem; margin-bottom:10px; }
   .login-box input { border:1px solid #99f6e4; }
   .login-box button { border:0; background:var(--tq); color:#fff; font-weight:800; cursor:pointer; }
   .login-error { color:#b91c1c; min-height:18px; }
-  @media (max-width:700px) { .flag-bar { width:84px; padding:10px 6px; } .wrap { margin-left:84px; } }
+  @media (max-width:700px) { .flag-bar { width:72px; } .wrap { margin-left:72px; padding:12px; } .login-emblem { width:180px; height:120px; } }
 </style>
 </head>
 <body>
 <div class="flag-bar">
   <div class="emblem" aria-label="Kokbayraq">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -30000 90000 60000" preserveAspectRatio="xMidYMid slice">
-      <path fill="#559EE2" d="m0-30000h90000v60000H0"/>
-      <path fill="#fff" d="m41750 0 13568-4408-8386 11541V-7133l8386 11541zm925 8021a15000 15000 0 1 1 0-16042 12000 12000 0 1 0 0 16042"/>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" preserveAspectRatio="xMidYMid slice">
+      <rect width="900" height="600" fill="#0099FF"/>
+      <circle cx="360" cy="300" r="165" fill="#fff"/>
+      <circle cx="412" cy="300" r="132" fill="#0099FF"/>
+      <polygon fill="#fff" points="560,168 589,258 684,258 608,314 637,404 560,348 483,404 512,314 436,258 531,258"/>
     </svg>
   </div>
 </div>
 <div id="login-screen">
   <div class="login-box">
     <div class="login-emblem">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -30000 90000 60000" preserveAspectRatio="xMidYMid slice">
-        <path fill="#559EE2" d="m0-30000h90000v60000H0"/>
-        <path fill="#fff" d="m41750 0 13568-4408-8386 11541zm925 8021a15000 15000 0 1 1 0-16042 12000 12000 0 1 0 0 16042"/>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" preserveAspectRatio="xMidYMid slice">
+        <rect width="900" height="600" fill="#0099FF"/>
+        <circle cx="360" cy="300" r="165" fill="#fff"/>
+        <circle cx="412" cy="300" r="132" fill="#0099FF"/>
+        <polygon fill="#fff" points="560,168 589,258 684,258 608,314 637,404 560,348 483,404 512,314 436,258 531,258"/>
       </svg>
     </div>
     <h2>TEM BÜLTEN</h2>
@@ -132,7 +131,7 @@
       <article class="card"><div class="card-header"><span class="source">Serxwebûn</span><span class="date">Son 2 hafta</span></div><div class="badge">Site</div><h3 class="card-title">Serxwebûn’da son 2 haftada yeni sayı yok</h3><p class="card-content">Son görünen yazılar Haziran 2025 tarihli.</p><a class="card-link" href="https://serxwebun.org/" target="_blank" rel="noopener">Site haberlerine Git →</a></article>
     </div>
   </div>
-  <footer>TEM BÜLTEN • Turkuaz tema • Sol amblem: Kokbayraq</footer>
+  <footer>TEM BÜLTEN • Turkuaz tema • Sol şerit: Kokbayraq</footer>
 </div>
 </div>
 <script>
