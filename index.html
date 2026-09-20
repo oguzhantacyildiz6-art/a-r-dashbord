@@ -51,7 +51,7 @@
 <div class="grid" id="org-grid"></div>
 <h2 class="main-title">Yerel ve Yabanci Medya</h2>
 <div class="grid" id="other-grid"></div>
-<footer>TEM BULTEN • ANF / Hawar / Serxwebun ayri, DW BBC TRT ayri</footer>
+<footer>TEM BULTEN • Orgut: ANF Hawar Serxwebun Rudaw • Yerel: BBC DW Sabah NTV Haberturk Sozcu</footer>
 </div></div>
 <script>
   const PASSWORD = "184504";
@@ -69,12 +69,16 @@
     return '<article class="card"><div class="card-header"><span class="source">'+esc(it.source||'')+'</span><span class="date">'+esc(it.date||'')+'</span></div><div class="badge">'+esc(it.badge||'Yeni')+'</div><h3 class="card-title">'+esc(it.title||'')+'</h3><p class="card-content">'+esc(it.summary||'')+'</p><a class="card-link" href="'+esc(it.url||'#')+'" target="_blank" rel="noopener">Habere Git</a></article>';
   }
   function splitNews(d){
-    const orgNames = {ANF:1,'Hawar News':1,Serxwebun:1};
+    const orgNames = {ANF:1,'Hawar News':1,Serxwebun:1,Rudaw:1};
+    const otherOk = {BBC:1,DW:1,Sabah:1,NTV:1,Haberturk:1,Sozcu:1};
     let org = d.news_org || [];
     let other = d.news_other || [];
     if (!org.length && !other.length && (d.news||[]).length) {
       org = d.news.filter(x => orgNames[x.source]);
-      other = d.news.filter(x => !orgNames[x.source]);
+      other = d.news.filter(x => otherOk[x.source]);
+    } else {
+      other = other.filter(x => otherOk[x.source] && x.source !== 'Google Haber');
+      org = org.filter(x => orgNames[x.source]);
     }
     return {org, other};
   }
