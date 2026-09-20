@@ -9,36 +9,32 @@
   * { box-sizing:border-box; margin:0; padding:0; }
   body { font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; background:#e6fffa; color:var(--ink); line-height:1.5; }
   .flag-bar {
-    position:fixed; left:0; top:0; bottom:0; width:86px;
-    background:#c8102e; display:flex; align-items:center; justify-content:center;
-    z-index:20;
+    position:fixed; left:0; top:0; bottom:0; width:92px;
+    background:transparent; display:flex; align-items:flex-start; justify-content:center;
+    padding-top:18px; z-index:20;
   }
-  .flag-emoji { font-size:46px; filter:drop-shadow(0 2px 2px rgba(0,0,0,.25)); }
-  .wrap { margin-left:86px; padding:22px 18px 40px; }
+  .emblem {
+    width:68px; height:68px; border-radius:50%; overflow:hidden;
+    box-shadow:0 4px 14px rgba(13,148,136,.35); border:3px solid #fff; background:#0099ff;
+  }
+  .emblem img { width:100%; height:100%; object-fit:cover; display:block; }
+  .wrap { margin-left:92px; padding:22px 18px 40px; }
   .container { max-width:1080px; margin:0 auto; display:none; }
   .container.show { display:block; }
-  header {
-    background:linear-gradient(135deg,#0d9488,#14b8a6);
-    color:#fff; border-radius:14px; padding:22px 20px 18px;
-    margin-bottom:22px; position:relative; overflow:hidden;
-  }
-  header:after { content:""; position:absolute; right:-40px; top:-40px; width:140px; height:140px; border:18px solid rgba(255,255,255,.18); border-radius:50%; }
-  header h1 { font-size:2rem; letter-spacing:.5px; }
+  header { background:linear-gradient(135deg,#0d9488,#14b8a6); color:#fff; border-radius:14px; padding:22px 20px 18px; margin-bottom:22px; }
+  header h1 { font-size:2rem; }
   header p { opacity:.95; margin-top:4px; }
   .last-update { font-size:.85rem; margin-top:8px; color:#ccfbf1; }
-  .main-title {
-    background:var(--tq); color:#fff; padding:10px 14px; border-radius:8px;
-    margin:8px 0 14px; font-size:1.2rem;
-  }
+  .main-title { background:var(--tq); color:#fff; padding:10px 14px; border-radius:8px; margin:8px 0 14px; font-size:1.2rem; }
   .section { margin-bottom:24px; }
   .section-title { color:var(--tq-dark); font-size:1.02rem; margin-bottom:10px; font-weight:700; }
   .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:12px; }
-  .card { background:#fff; border:1px solid #99f6e4; border-left:5px solid var(--tq); border-radius:10px; padding:14px 14px 16px; }
+  .card { background:#fff; border:1px solid #99f6e4; border-left:5px solid var(--tq); border-radius:10px; padding:14px; }
   .card-header { display:flex; justify-content:space-between; gap:8px; margin-bottom:6px; font-size:.8rem; }
   .source { color:var(--tq-dark); font-weight:700; }
   .date { color:var(--muted); }
   .badge { display:inline-block; background:var(--tq-soft); color:var(--tq-dark); font-size:.68rem; font-weight:700; padding:2px 8px; border-radius:999px; margin-bottom:6px; }
-  .card-title { font-size:1.02rem; font-weight:800; margin-bottom:6px; line-height:1.3; }
+  .card-title { font-size:1.02rem; font-weight:800; margin-bottom:6px; }
   .card-content { font-size:.9rem; color:#333; margin-bottom:12px; }
   .card-link { display:inline-block; background:var(--tq); color:#fff; text-decoration:none; font-weight:700; font-size:.84rem; padding:7px 12px; border-radius:7px; }
   footer { text-align:center; margin-top:28px; color:var(--muted); font-size:.85rem; }
@@ -46,18 +42,26 @@
   .login-box { width:100%; max-width:360px; background:#fff; border-radius:16px; padding:28px 22px; text-align:center; }
   .login-box h2 { color:var(--tq-dark); }
   .login-box p { color:#555; margin:8px 0 16px; }
+  .login-emblem { width:72px; height:72px; border-radius:50%; overflow:hidden; margin:0 auto 10px; border:3px solid #ccfbf1; }
+  .login-emblem img { width:100%; height:100%; object-fit:cover; }
   .login-box input, .login-box button { width:100%; padding:12px; border-radius:8px; font-size:1rem; margin-bottom:10px; }
   .login-box input { border:1px solid #99f6e4; }
   .login-box button { border:0; background:var(--tq); color:#fff; font-weight:800; cursor:pointer; }
   .login-error { color:#b91c1c; min-height:18px; }
-  @media (max-width:700px) { .flag-bar { width:54px; } .wrap { margin-left:54px; } .flag-emoji { font-size:30px; } }
+  @media (max-width:700px) { .flag-bar { width:64px; } .emblem { width:48px; height:48px; } .wrap { margin-left:64px; } }
 </style>
 </head>
 <body>
-<div class="flag-bar" aria-hidden="true"><span class="flag-emoji">🇹🇷</span></div>
+<div class="flag-bar">
+  <div class="emblem">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Kokbayraq_flag.svg/240px-Kokbayraq_flag.svg.png" alt="Kokbayraq">
+  </div>
+</div>
 <div id="login-screen">
   <div class="login-box">
-    <div style="font-size:34px;margin-bottom:6px;">🇹🇷</div>
+    <div class="login-emblem">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Kokbayraq_flag.svg/240px-Kokbayraq_flag.svg.png" alt="Kokbayraq">
+    </div>
     <h2>TEM BÜLTEN</h2>
     <p>Şifreyi girerek devam edin</p>
     <form id="login-form">
@@ -118,10 +122,10 @@
     <div class="grid">
       <article class="card"><div class="card-header"><span class="source">ANF</span><span class="date">20 Eyl</span></div><div class="badge">PYD</div><h3 class="card-title">PYD kuruluşu Silêmani’de kutlandı</h3><p class="card-content">ANF, yıldönümü etkinliğinin Süleymaniye’de yapıldığını duyurdu.</p><a class="card-link" href="https://anf-news.com/latest-news" target="_blank" rel="noopener">Haber listesine Git →</a></article>
       <article class="card"><div class="card-header"><span class="source">Hawar News</span><span class="date">20 Eyl</span></div><div class="badge">PYD</div><h3 class="card-title">PYD 23. yıl etkinlikleri</h3><p class="card-content">Qamishlo, Derik, Til Temir ve Haseke’de program duyuruldu.</p><a class="card-link" href="https://hawarnews.com/en/news" target="_blank" rel="noopener">Haber listesine Git →</a></article>
-      <article class="card"><div class="card-header"><span class="source">Serxwebûn</span><span class="date">Son 2 hafta</span></div><div class="badge">Site</div><h3 class="card-title">Serxwebûn’da son 2 haftada yeni sayı yok</h3><p class="card-content">Son görünen yazılar Haziran 2025 tarihli. Güncel kontrol için siteye bakın.</p><a class="card-link" href="https://serxwebun.org/" target="_blank" rel="noopener">Site haberlerine Git →</a></article>
+      <article class="card"><div class="card-header"><span class="source">Serxwebûn</span><span class="date">Son 2 hafta</span></div><div class="badge">Site</div><h3 class="card-title">Serxwebûn’da son 2 haftada yeni sayı yok</h3><p class="card-content">Son görünen yazılar Haziran 2025 tarihli.</p><a class="card-link" href="https://serxwebun.org/" target="_blank" rel="noopener">Site haberlerine Git →</a></article>
     </div>
   </div>
-  <footer>TEM BÜLTEN • Turkuaz tema • Sol tarafta Türkiye bayrağı</footer>
+  <footer>TEM BÜLTEN • Turkuaz tema • Sol amblem: Kokbayraq</footer>
 </div>
 </div>
 <script>
