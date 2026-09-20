@@ -16,7 +16,7 @@
   header { background:linear-gradient(135deg,#0d9488,#14b8a6); color:#fff; border-radius:14px; padding:20px 18px 16px; margin-bottom:18px; }
   header h1 { font-size:1.9rem; }
   .last-update { font-size:.85rem; margin-top:8px; color:#ccfbf1; }
-  .main-title { background:var(--tq); color:#fff; padding:10px 14px; border-radius:8px; margin:8px 0 14px; font-size:1.2rem; }
+  .main-title { background:var(--tq); color:#fff; padding:10px 14px; border-radius:8px; margin:16px 0 14px; font-size:1.2rem; }
   .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:12px; }
   .card { background:#fff; border:1px solid #99f6e4; border-left:5px solid var(--tq); border-radius:10px; padding:14px; }
   .card-header { display:flex; justify-content:space-between; gap:8px; margin-bottom:6px; font-size:.8rem; }
@@ -43,7 +43,16 @@
 <body>
 <div class="flag-bar"><div class="emblem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" preserveAspectRatio="xMidYMid slice"><rect width="900" height="600" fill="#0099FF"/><circle cx="360" cy="300" r="165" fill="#fff"/><circle cx="412" cy="300" r="132" fill="#0099FF"/><polygon fill="#fff" points="560,168 589,258 684,258 608,314 637,404 560,348 483,404 512,314 436,258 531,258"/></svg></div></div>
 <div id="login-screen"><div class="login-box"><div class="login-emblem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" preserveAspectRatio="xMidYMid slice"><rect width="900" height="600" fill="#0099FF"/><circle cx="360" cy="300" r="165" fill="#fff"/><circle cx="412" cy="300" r="132" fill="#0099FF"/><polygon fill="#fff" points="560,168 589,258 684,258 608,314 637,404 560,348 483,404 512,314 436,258 531,258"/></svg></div><h2>TEM BULTEN</h2><p>Sifreyi girerek devam edin</p><form id="login-form"><input id="password" type="password" placeholder="Sifre" autocomplete="current-password"><button type="submit">Giris Yap</button></form><div class="login-error" id="login-error"></div></div></div>
-<div class="wrap"><div class="container" id="app"><header><h1>TEM BULTEN</h1><p>Haber siteleri 15 dakikada bir otomatik taranir. X hesaplari ucretsiz ayna uzerinden denenir.</p><p class="last-update" id="last-update">Tarama bekleniyor</p></header><h2 class="main-title">Sosyal Medya</h2><div class="grid" id="social-grid"></div><h2 class="main-title">Haber Siteleri</h2><div class="grid" id="news-grid"></div><footer>TEM BULTEN • otomatik tarama 15 dk</footer></div></div>
+<div class="wrap"><div class="container" id="app">
+<header><h1>TEM BULTEN</h1><p>Haber siteleri 15 dakikada bir otomatik taranir.</p><p class="last-update" id="last-update">Tarama bekleniyor</p></header>
+<h2 class="main-title">Sosyal Medya</h2>
+<div class="grid" id="social-grid"></div>
+<h2 class="main-title">Orgut Medyasi</h2>
+<div class="grid" id="org-grid"></div>
+<h2 class="main-title">Yerel ve Yabanci Medya</h2>
+<div class="grid" id="other-grid"></div>
+<footer>TEM BULTEN • ANF / Hawar / Serxwebun ayri, DW BBC TRT ayri</footer>
+</div></div>
 <script>
   const PASSWORD = "184504";
   const loginScreen = document.getElementById("login-screen");
@@ -59,12 +68,24 @@
   function card(it){
     return '<article class="card"><div class="card-header"><span class="source">'+esc(it.source||'')+'</span><span class="date">'+esc(it.date||'')+'</span></div><div class="badge">'+esc(it.badge||'Yeni')+'</div><h3 class="card-title">'+esc(it.title||'')+'</h3><p class="card-content">'+esc(it.summary||'')+'</p><a class="card-link" href="'+esc(it.url||'#')+'" target="_blank" rel="noopener">Habere Git</a></article>';
   }
+  function splitNews(d){
+    const orgNames = {ANF:1,'Hawar News':1,Serxwebun:1};
+    let org = d.news_org || [];
+    let other = d.news_other || [];
+    if (!org.length && !other.length && (d.news||[]).length) {
+      org = d.news.filter(x => orgNames[x.source]);
+      other = d.news.filter(x => !orgNames[x.source]);
+    }
+    return {org, other};
+  }
   async function loadFeed(){
     try {
       const d = await (await fetch('/api/feed')).json();
+      const parts = splitNews(d);
       document.getElementById('last-update').textContent = 'Son tarama: ' + (d.last_scan || 'henuz yok') + ' • 15 dakikada bir';
       document.getElementById('social-grid').innerHTML = (d.social||[]).map(card).join('') || '<p>Sosyal medya henuz dolmadi.</p>';
-      document.getElementById('news-grid').innerHTML = (d.news||[]).map(card).join('') || '<p>Haber henuz dolmadi. Ilk tarama birkac saniye surebilir.</p>';
+      document.getElementById('org-grid').innerHTML = parts.org.map(card).join('') || '<p>Orgut medyasi henuz dolmadi.</p>';
+      document.getElementById('other-grid').innerHTML = parts.other.map(card).join('') || '<p>Yerel / yabanci medya henuz dolmadi.</p>';
     } catch(e) { document.getElementById('last-update').textContent = 'Besleme alinamadi'; }
   }
   setInterval(loadFeed, 60000);
