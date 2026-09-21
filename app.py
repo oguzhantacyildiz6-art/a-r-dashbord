@@ -37,7 +37,11 @@ def home():
 
 @app.route("/api/feed")
 def feed():
-    return jsonify(load_data())
+    data = load_data()
+    empty = not (data.get("news_org") or data.get("news_other") or data.get("news_city") or data.get("social"))
+    if empty:
+        data = safe_scan()
+    return jsonify(data)
 
 
 @app.route("/api/scan")
