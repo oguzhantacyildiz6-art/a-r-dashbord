@@ -33,7 +33,7 @@ HOST_NAME = {
     "cnn.com": "CNN", "cnnturk.com": "CNN",
     "reuters.com": "Reuters",
     "rudaw.net": "Rudaw",
-    "anf-news.com": "ANF", "anfenglish.com": "ANF",
+    "anf-news.com": "ANF", "anfenglish.com": "ANF", "anfkurdi.com": "ANF",
     "hawarnews.com": "Hawar News",
     "serxwebun.org": "Serxwebun",
     "kent04.com": "Kent04",
@@ -81,7 +81,7 @@ def fetch(url, timeout=18):
 
 
 def strip_tags(text):
-    text = re.sub(r"<[^>]+", " ", text or "")
+    text = re.sub(r"<[^>]+>", " ", text or "")
     text = unescape(text)
     return re.sub(r"\s+", " ", text).strip()
 
@@ -106,12 +106,6 @@ def parse_dt(raw, url=""):
             return dt.astimezone(TZ)
         except Exception:
             pass
-        for fmt in ("%Y-%m-%dT%H:%M:%S%z", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d", "%d.%m.%Y", "%d/%m/%Y"):
-            try:
-                dt = datetime.strptime(raw[:19].replace("Z", ""), fmt.replace("%z", ""))
-                return dt.replace(tzinfo=TZ)
-            except Exception:
-                continue
         m = re.search(r"(20\d{2})[-/](\d{1,2})[-/](\d{1,2})", raw)
         if m:
             return datetime(int(m.group(1)), int(m.group(2)), int(m.group(3)), tzinfo=TZ)
@@ -122,9 +116,7 @@ def parse_dt(raw, url=""):
 
 
 def fmt_date(dt):
-    if not dt:
-        return ""
-    return dt.strftime("%d.%m.%Y")
+    return dt.strftime("%d.%m.%Y") if dt else ""
 
 
 def in_window(dt, days, allow_missing):
@@ -190,14 +182,11 @@ def scrape_links(html, base):
         if not url.startswith("http"):
             continue
         items.append({"title": inner, "url": url, "summary": inner, "pub": ""})
-    times = re.findall(r"datetime=[\"']([^\"']+)[\"']", html or "")
     seen, out = set(), []
-    for i, it in enumerate(items):
+    for it in items:
         if it["url"] in seen:
             continue
         seen.add(it["url"])
-        if i < len(times):
-            it["pub"] = times[i]
         out.append(it)
         if len(out) >= 50:
             break
@@ -212,7 +201,7 @@ def add_item(out, name, row, group):
         return
     dt = parse_dt(row.get("pub") or "", url)
     blob = title + " " + (row.get("summary") or "")
-    if group in ("org", "other") and not relevant(blob):
+    if group == "other" and not relevant(blob):
         return
     if group == "org" and source not in ORG_SOURCES:
         return
@@ -221,7 +210,7 @@ def add_item(out, name, row, group):
     if group == "city" and source not in CITY_SOURCES:
         return
     days = {"org": 30, "other": 15, "city": 7}[group]
-    if not in_window(dt, days, allow_missing=(group == "city")):
+    if not in_window(dt, days, allow_missing=True):
         return
     out.append({
         "section": group,
@@ -230,19 +219,22 @@ def add_item(out, name, row, group):
         "title": title[:160],
         "summary": (row.get("summary") or title)[:280],
         "url": url,
-        "date": fmt_date(dt) or "",
+        "date": fmt_date(dt),
         "badge": source,
     })
 
 
 def scan_news():
     jobs = [
+        ("org", "ANF", "https://anfenglish.com/news", False),
+        ("org", "ANF", "https://anfenglish.com/", False),
         ("org", "ANF", "https://anf-news.com/latest-news", False),
         ("org", "ANF", "https://anf-news.com/rss", True),
         ("org", "Hawar News", "https://hawarnews.com/en/news", False),
         ("org", "Hawar News", "https://hawarnews.com/en/rss/latest-posts", True),
         ("org", "Serxwebun", "https://serxwebun.org/", False),
         ("org", "Rudaw", "https://www.rudaw.net/turkish", False),
+        ("org", "Rudaw", "https://www.rudaw.net/turkish/kurdistan", False),
         ("other", "BBC", "https://feeds.bbci.co.uk/turkce/rss.xml", True),
         ("other", "DW", "https://rss.dw.com/rdf/rss-tur-all", True),
         ("other", "Sabah", "https://www.sabah.com.tr/rss/gundem.xml", True),
