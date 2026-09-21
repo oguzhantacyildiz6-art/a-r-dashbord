@@ -4,8 +4,9 @@ import os
 import re
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
+from email.utils import parsedate_to_datetime
 from html import unescape
-from urllib.parse import parse_qs, unquote, urljoin, urlparse
+from urllib.parse import parse_qs, urljoin, urlparse
 from urllib.request import Request, urlopen
 
 DATA_FILE = os.path.join(os.path.dirname(__file__), "data.json")
@@ -14,25 +15,32 @@ UA = "Mozilla/5.0 TEM-BULTEN/1.0"
 
 KEYWORDS = (
     "pkk", "pyd", "pjak", "ypg", "kck", "hpg", "ocalan",
-    "imrali", "qandil", "kandil", "rojava", "teror orgutu",
+    "imrali", "qandil", "kandil", "rojava",
 )
 
 ORG_SOURCES = {"ANF", "Hawar News", "Serxwebun", "Rudaw"}
-ALLOWED_OTHER = {"BBC", "DW", "Sabah", "NTV", "Haberturk", "Sozcu"}
+OTHER_SOURCES = {"BBC", "DW", "Sabah", "NTV", "Haberturk", "Sozcu", "Euronews", "CNN", "Reuters"}
+CITY_SOURCES = {"Agrihaber", "Kent04", "Agribasin"}
 
 HOST_NAME = {
-    "bbc.com": "BBC",
-    "bbc.co.uk": "BBC",
+    "bbc.com": "BBC", "bbc.co.uk": "BBC",
     "dw.com": "DW",
     "sabah.com.tr": "Sabah",
     "ntv.com.tr": "NTV",
     "haberturk.com": "Haberturk",
     "sozcu.com.tr": "Sozcu",
+    "euronews.com": "Euronews",
+    "cnn.com": "CNN", "cnnturk.com": "CNN",
+    "reuters.com": "Reuters",
     "rudaw.net": "Rudaw",
-    "anf-news.com": "ANF",
-    "anfenglish.com": "ANF",
+    "anf-news.com": "ANF", "anfenglish.com": "ANF",
     "hawarnews.com": "Hawar News",
     "serxwebun.org": "Serxwebun",
+    "kent04.com": "Kent04",
+    "agribasin.com": "Agribasin",
+    "agrihaber.com": "Agrihaber",
+    "agrihabertv.com": "Agrihaber",
+    "agrihabergazetesi.net": "Agrihaber",
 }
 
 X_ACCOUNTS = [
@@ -41,12 +49,7 @@ X_ACCOUNTS = [
     ("@HazalAras04", "HazalAras04"),
     ("@agr_hdp", "agr_hdp"),
 ]
-
-NITTER = [
-    "https://xcancel.com",
-    "https://nitter.poast.org",
-    "https://nitter.privacyredirect.com",
-]
+NITTER = ["https://xcancel.com", "https://nitter.poast.org", "https://nitter.privacyredirect.com"]
 
 
 def now_tr():
@@ -60,7 +63,7 @@ def load_data():
                 return json.load(f)
         except Exception:
             pass
-    return {"last_scan": None, "social": [], "news_org": [], "news_other": []}
+    return {"last_scan": None, "social": [], "news_org": [], "news_other": [], "news_city": []}
 
 
 def save_data(data):
@@ -78,19 +81,14 @@ def fetch(url, timeout=18):
 
 
 def strip_tags(text):
-    text = re.sub(r"<[^>]+>", " ", text or "")
+    text = re.sub(r"<[^>]+", " ", text or "")
     text = unescape(text)
     return re.sub(r"\s+", " ", text).strip()
 
 
 def fold(text):
     t = (text or "").lower()
-    return (
-        t.replace("\u00f6", "o").replace("\u00d6", "o")
-        .replace("\u0131", "i").replace("\u0130", "i")
-        .replace("\u00fc", "u").replace("\u00e7", "c")
-        .replace("\u015f", "s").replace("\u011f", "g")
-    )
+    return t.replace("\u00f6", "o").replace("\u0131", "i").replace("\u00fc", "u").replace("\u00e7", "c").replace("\u015f", "s").replace("\u011f", "g")
 
 
 def relevant(text):
@@ -98,14 +96,49 @@ def relevant(text):
     return any(k in t for k in KEYWORDS)
 
 
+def parse_dt(raw, url=""):
+    raw = (raw or "").strip()
+    if raw:
+        try:
+            dt = parsedate_to_datetime(raw)
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=TZ)
+            return dt.astimezone(TZ)
+        except Exception:
+            pass
+        for fmt in ("%Y-%m-%dT%H:%M:%S%z", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d", "%d.%m.%Y", "%d/%m/%Y"):
+            try:
+                dt = datetime.strptime(raw[:19].replace("Z", ""), fmt.replace("%z", ""))
+                return dt.replace(tzinfo=TZ)
+            except Exception:
+                continue
+        m = re.search(r"(20\d{2})[-/](\d{1,2})[-/](\d{1,2})", raw)
+        if m:
+            return datetime(int(m.group(1)), int(m.group(2)), int(m.group(3)), tzinfo=TZ)
+    m = re.search(r"/(20\d{2})/(\d{1,2})/(\d{1,2})/", url or "")
+    if m:
+        return datetime(int(m.group(1)), int(m.group(2)), int(m.group(3)), tzinfo=TZ)
+    return None
+
+
+def fmt_date(dt):
+    if not dt:
+        return ""
+    return dt.strftime("%d.%m.%Y")
+
+
+def in_window(dt, days, allow_missing):
+    if dt is None:
+        return allow_missing
+    return (now_tr() - dt) <= timedelta(days=days)
+
+
 def unwrap(url):
-    if not url:
-        return url
-    if "news.google.com" in url:
+    if url and "news.google.com" in url:
         qs = parse_qs(urlparse(url).query)
         if "url" in qs:
             return qs["url"][0]
-    return url
+    return url or ""
 
 
 def name_from_url(url, fallback=""):
@@ -113,22 +146,6 @@ def name_from_url(url, fallback=""):
     for key, name in HOST_NAME.items():
         if key in host:
             return name
-    return fallback
-
-
-def source_from_title(title, fallback):
-    parts = re.split(r"\s[-\u2013|]\s", title or "")
-    if len(parts) >= 2:
-        tail = parts[-1].strip()
-        mapping = {
-            "sabah": "Sabah", "ntv": "NTV", "haberturk": "Haberturk",
-            "habertürk": "Haberturk", "sozcu": "Sozcu", "sözcü": "Sozcu",
-            "bbc": "BBC", "dw": "DW", "deutsche welle": "DW",
-        }
-        key = fold(tail)
-        for k, v in mapping.items():
-            if k in key:
-                return v
     return fallback
 
 
@@ -142,7 +159,7 @@ def parse_rss(xml_bytes):
         tag = it.tag.split("}")[-1].lower()
         if tag not in ("item", "entry"):
             continue
-        title = link = desc = pub = src = ""
+        title = link = desc = pub = ""
         for c in list(it):
             ctag = c.tag.split("}")[-1].lower()
             if ctag == "title":
@@ -155,11 +172,9 @@ def parse_rss(xml_bytes):
                 if hrefs and (not link or "news.google.com" in link):
                     link = hrefs[0]
             elif ctag in ("pubdate", "published", "updated", "date"):
-                pub = strip_tags(c.text or "")[:40]
-            elif ctag == "source":
-                src = strip_tags(c.text or "")
+                pub = strip_tags(c.text or "")[:80]
         if title and link:
-            items.append({"title": title, "url": unwrap(link), "summary": desc or title, "date": pub, "src": src})
+            items.append({"title": title, "url": unwrap(link), "summary": desc or title, "pub": pub})
     return items
 
 
@@ -174,71 +189,82 @@ def scrape_links(html, base):
         url = urljoin(base, href)
         if not url.startswith("http"):
             continue
-        items.append({"title": inner, "url": url, "summary": inner, "date": "", "src": ""})
+        items.append({"title": inner, "url": url, "summary": inner, "pub": ""})
+    times = re.findall(r"datetime=[\"']([^\"']+)[\"']", html or "")
     seen, out = set(), []
-    for it in items:
+    for i, it in enumerate(items):
         if it["url"] in seen:
             continue
         seen.add(it["url"])
+        if i < len(times):
+            it["pub"] = times[i]
         out.append(it)
         if len(out) >= 50:
             break
     return out
 
 
-def add_item(out, name, row):
+def add_item(out, name, row, group):
     url = unwrap(row.get("url") or "")
     title = row.get("title") or ""
-    source = name_from_url(url, "") or source_from_title(title, name) or name
-    if source == name and row.get("src"):
-        source = source_from_title(row["src"], source)
-    blob = title + " " + (row.get("summary") or "") + " " + source
-    if not relevant(blob):
-        return
+    source = name_from_url(url, name) or name
     if "news.google.com" in url:
         return
-    group = "org" if source in ORG_SOURCES else "other"
-    if group == "other" and source not in ALLOWED_OTHER:
+    dt = parse_dt(row.get("pub") or "", url)
+    blob = title + " " + (row.get("summary") or "")
+    if group in ("org", "other") and not relevant(blob):
+        return
+    if group == "org" and source not in ORG_SOURCES:
+        return
+    if group == "other" and source not in OTHER_SOURCES:
+        return
+    if group == "city" and source not in CITY_SOURCES:
+        return
+    days = {"org": 30, "other": 15, "city": 7}[group]
+    if not in_window(dt, days, allow_missing=(group == "city")):
         return
     out.append({
-        "section": "news",
+        "section": group,
         "group": group,
         "source": source,
-        "title": re.sub(r"\s[-\u2013|]\s(Sabah|NTV|Haberturk|Sozcu|BBC|DW).*$", "", title, flags=re.I)[:160],
+        "title": title[:160],
         "summary": (row.get("summary") or title)[:280],
         "url": url,
-        "date": row.get("date") or now_tr().strftime("%d.%m %H:%M"),
+        "date": fmt_date(dt) or "",
         "badge": source,
     })
 
 
 def scan_news():
-    sources = [
-        ("ANF", "https://anf-news.com/latest-news", False),
-        ("ANF", "https://anf-news.com/rss", True),
-        ("Hawar News", "https://hawarnews.com/en/news", False),
-        ("Hawar News", "https://hawarnews.com/en/rss/latest-posts", True),
-        ("Serxwebun", "https://serxwebun.org/", False),
-        ("Rudaw", "https://www.rudaw.net/turkish", False),
-        ("BBC", "https://feeds.bbci.co.uk/turkce/rss.xml", True),
-        ("DW", "https://rss.dw.com/rdf/rss-tur-all", True),
-        ("Sabah", "https://www.sabah.com.tr/rss/gundem.xml", True),
-        ("Sabah", "https://www.sabah.com.tr/arama?query=PKK", False),
-        ("NTV", "https://www.ntv.com.tr/gundem.rss", True),
-        ("NTV", "https://www.ntv.com.tr/arama?q=PKK", False),
-        ("Haberturk", "https://www.haberturk.com/rss", True),
-        ("Haberturk", "https://www.haberturk.com/haberleri/pkk", False),
-        ("Sozcu", "https://www.sozcu.com.tr/feeds-rss-category-gundem", True),
-        ("Sozcu", "https://www.sozcu.com.tr/haberleri/pkk/", False),
-        ("BBC", "https://news.google.com/rss/search?q=PKK+OR+PYD+site:bbc.com+OR+site:dw.com+OR+site:sabah.com.tr+OR+site:ntv.com.tr+OR+site:haberturk.com+OR+site:sozcu.com.tr&hl=tr&gl=TR&ceid=TR:tr", True),
+    jobs = [
+        ("org", "ANF", "https://anf-news.com/latest-news", False),
+        ("org", "ANF", "https://anf-news.com/rss", True),
+        ("org", "Hawar News", "https://hawarnews.com/en/news", False),
+        ("org", "Hawar News", "https://hawarnews.com/en/rss/latest-posts", True),
+        ("org", "Serxwebun", "https://serxwebun.org/", False),
+        ("org", "Rudaw", "https://www.rudaw.net/turkish", False),
+        ("other", "BBC", "https://feeds.bbci.co.uk/turkce/rss.xml", True),
+        ("other", "DW", "https://rss.dw.com/rdf/rss-tur-all", True),
+        ("other", "Sabah", "https://www.sabah.com.tr/rss/gundem.xml", True),
+        ("other", "NTV", "https://www.ntv.com.tr/gundem.rss", True),
+        ("other", "Haberturk", "https://www.haberturk.com/rss", True),
+        ("other", "Sozcu", "https://www.sozcu.com.tr/feeds-rss-category-gundem", True),
+        ("other", "Euronews", "https://tr.euronews.com/rss", True),
+        ("other", "CNN", "https://www.cnnturk.com/feed/rss/all/news", True),
+        ("other", "Reuters", "https://www.reuters.com/world/rss", True),
+        ("other", "BBC", "https://news.google.com/rss/search?q=PKK+OR+PYD+(site:bbc.com+OR+site:dw.com+OR+site:euronews.com+OR+site:cnn.com+OR+site:cnnturk.com+OR+site:reuters.com+OR+site:sabah.com.tr+OR+site:ntv.com.tr+OR+site:haberturk.com+OR+site:sozcu.com.tr)&hl=tr&gl=TR&ceid=TR:tr", True),
+        ("city", "Kent04", "https://www.kent04.com/", False),
+        ("city", "Agribasin", "https://www.agribasin.com/", False),
+        ("city", "Agrihaber", "https://www.agrihabertv.com/", False),
+        ("city", "Agrihaber", "https://www.agrihaber.com/", False),
     ]
     out = []
-    for name, url, is_rss in sources:
+    for group, name, url, is_rss in jobs:
         try:
             raw = fetch(url)
             rows = parse_rss(raw) if is_rss else scrape_links(raw.decode("utf-8", "ignore"), url)
             for row in rows:
-                add_item(out, name, row)
+                add_item(out, name, row, group)
         except Exception:
             continue
     return dedupe(out)
@@ -252,13 +278,13 @@ def scan_x():
             try:
                 rows = parse_rss(fetch(f"{host}/{handle}/rss"))
                 for row in rows[:6]:
+                    dt = parse_dt(row.get("pub") or "", row.get("url") or "")
                     out.append({
-                        "section": "social",
-                        "source": label,
+                        "section": "social", "source": label,
                         "title": row["title"][:160],
                         "summary": (row.get("summary") or row["title"])[:280],
                         "url": f"https://x.com/{handle}",
-                        "date": row.get("date") or now_tr().strftime("%d.%m %H:%M"),
+                        "date": fmt_date(dt),
                         "badge": "X",
                     })
                 got = True
@@ -267,12 +293,11 @@ def scan_x():
                 continue
         if not got:
             out.append({
-                "section": "social",
-                "source": label,
+                "section": "social", "source": label,
                 "title": f"{label} hesabi izleniyor",
                 "summary": "X resmi API ucretsiz degil.",
                 "url": f"https://x.com/{handle}",
-                "date": now_tr().strftime("%d.%m %H:%M"),
+                "date": "",
                 "badge": "Beklemede",
             })
     return dedupe(out)
@@ -294,7 +319,8 @@ def run_scan():
     news = scan_news()
     social = scan_x()
     data["news_org"] = [x for x in news if x.get("group") == "org"][:60]
-    data["news_other"] = [x for x in news if x.get("group") != "org"][:50]
+    data["news_other"] = [x for x in news if x.get("group") == "other"][:50]
+    data["news_city"] = [x for x in news if x.get("group") == "city"][:40]
     data["news"] = news[:80]
     if social:
         data["social"] = social[:40]
